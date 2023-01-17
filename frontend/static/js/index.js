@@ -1,10 +1,14 @@
 // frontend/static/js/index.js
 
+import Home from "./pages/Home.js";
+import Posts from "./pages/Posts.js";
+import Settings from "./pages/Settings.js";
+
 const router = async () => {
   const routes = [
-    { path: "/", view: () => console.log("Viewing Home") },
-    { path: "/posts", view: () => console.log("Viewing Posts") },
-    { path: "/settings", view: () => console.log("Viewing Settings") },
+    { path: "/", view: Home },
+    { path: "/posts", view: Posts },
+    { path: "/settings", view: Settings },
   ];
 
   const pageMatches = routes.map((route) => {
@@ -13,8 +17,9 @@ const router = async () => {
       isMatch: route.path === location.pathname,
     };
   });
-  let match = pageMatches.find((pageMatch) => pageMatch.isMatch);
-  console.log(match.route.view());
+
+  const page = new match.route.view();
+  document.querySelector("#root").innerHTML = await page.getHtml();
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -25,5 +30,10 @@ document.addEventListener("DOMContentLoaded", () => {
       router();
     }
   });
+  router();
+});
+
+// 뒤로 가기 할 때 데이터 나오게 하기 위함
+window.addEventListener("popstate", () => {
   router();
 });
